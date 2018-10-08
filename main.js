@@ -16,8 +16,8 @@ function main() {
   lor.set('HalfElven', 'Arwen');
   lor.set('Ent', 'Treebeard');
 
-  console.log(lor.get('Maiar'));
-  console.log(lor);
+  // console.log(lor.get('Maiar'));
+  // console.log(lor);
 
   function isPalindrome(str) {
     const chars = new hashMapClass();
@@ -38,8 +38,32 @@ function main() {
     return (chars.length > 1) ? false : true;
   }
 
-  console.log(isPalindrome('acecarr'));
-  console.log(isPalindrome('north'));
+  // console.log(isPalindrome('acecarr'));
+  // console.log(isPalindrome('north'));
+
+  function anagramGrouping(arr) {
+    const compareHash = new hashMapClass();
+    let anagramGroups = [];
+    for (let i = 0; i < arr.length; i++) {
+      let currWord = arr[i];
+      let sortedWord = arr[i].split('').sort().join('');
+
+      try {
+        compareHash.get(sortedWord).push(currWord);
+      } catch (error) {
+        compareHash.set(sortedWord, [currWord]);
+      }
+    }
+    console.log(compareHash);
+    for (let i = 0; i < compareHash._slots.length; i++) {
+      if (compareHash._slots[i]) {
+        anagramGroups.push(compareHash._slots[i].value);
+      }
+    }
+    return anagramGroups;
+  }
+  console.log(anagramGrouping(['east', 'cars', 'acre', 'arcs', 'teas', 'eats', 'race']));
+
 }
 
 main();
