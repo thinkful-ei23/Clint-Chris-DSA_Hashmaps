@@ -17,7 +17,18 @@ function main() {
   lor.set('Ent', 'Treebeard');
 
   console.log(lor.get('Maiar'));
+  console.log(lor);
 
+  function isPalindrome(str) {
+    const chars = new hashMapClass();
+    for (let i = 0; i < str.length; i++) {
+      let char = str[i];
+      chars.set(char, )
+    }
+    console.log(chars);
+  }
+
+  isPalindrome('acecarr');
 }
 
 main();
