@@ -73,14 +73,19 @@ function main() {
   lor2.set('Human', 'Aragon');
   lor2.set('Elf', 'Legolas');
   lor2.set('Maiar', 'The Necromancer');
-  // lor2.set('Maiar', 'Sauron');
-  // lor2.set('RingBearer', 'Gollum');
-  // lor2.set('LadyOfLight', 'Galadriel');
-  // lor2.set('HalfElven', 'Arwen');
-  // lor2.set('Ent', 'Treebeard');
+  lor2.set('Maiar', 'Sauron');
+  lor2.set('RingBearer', 'Gollum');
+  lor2.set('LadyOfLight', 'Galadriel');
+  lor2.set('HalfElven', 'Arwen');
+  lor2.set('Ent', 'Treebeard');
 
   console.log(lor2);
-
+  
+  console.log(lor2.get('Elf'));
+  
+  lor2.remove('Wizard');
+  console.log(lor2);
+  // console.log(lor2.get('Wizard'));
 }
 
 main();

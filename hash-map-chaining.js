@@ -7,7 +7,6 @@ class HashMap {
     this.length = 0;
     this._slots = [];
     this._capacity = initialCapacity;
-    this._deleted = 0;
   }
 
   get(key) {
@@ -15,29 +14,41 @@ class HashMap {
     if (this._slots[index] === undefined) {
       throw new Error('Key error');
     }
-    return this._slots[index].find(key).value;
+    let currentNode = this._slots[index].head;
+    if (currentNode !== null && currentNode.value.key === key) {
+      return currentNode;
+    }
+    while (currentNode.next !== null) {
+      if (currentNode.next.value.key === key) {
+        return currentNode.next;
+      }
+      currentNode = currentNode.next;
+    }
+    throw new Error('Key error');
   }
 
   set(key, value) {
-    const loadRatio = (this.length + this._deleted + 1) / this._capacity;
+    const loadRatio = (this.length + 1) / this._capacity;
     if (loadRatio > HashMap.MAX_LOAD_RATIO) {
       this._resize(this._capacity * HashMap.SIZE_RATIO);
     }
+    // console.log('this._capacity = ', this._capacity);
 
     const index = this._findSlot(key);
-    const slot = this._slots[index];
-    if (slot === undefined) {
-      this._slot[index] = {
-        key: new LinkedList().insertLast(value)
-      };
+    // console.log(`attempting to insert ${key}:${value} into...`);
+    // console.log('slot:', slot);
+    if (this._slots[index]) {
+      if (this._slots[index].head.value.key === key) {
+        this.remove(key);
+        this._slots[index].insertFirst({key, value});
+      } else {
+        this._slots[index].insertLast({key, value});
+      }
     } else {
-      slot.key.insertLast(value);
+      let newList = new LinkedList();
+      newList.insertFirst({key, value});
+      this._slots[index] = newList;
     }
-    // this._slots[index].insertLast({
-    //   key,
-    //   value,
-    //   deleted: false
-    // });
     this.length++;
   }
 
@@ -47,20 +58,34 @@ class HashMap {
     if (slot === undefined) {
       throw new Error('Key error');
     }
-    slot.remove(key);
+    let currentNode = this._slots[index].head;
+
+    if (currentNode.next === null & currentNode.value.key === key) {
+      this._slots[index].remove(currentNode.value);
+    }
+    while (currentNode.next !== null) {
+      if (currentNode.value.key === key) {
+        this._slots[index].remove(currentNode.value);
+      }
+      currentNode = currentNode.next;
+    }
     this.length--;
   }
 
   _findSlot(key) {
     const hash = HashMap._hashString(key);
-    const start = hash % this._capacity;
+    // console.log(`hash for ${key} = `, hash);
+    const index = hash % this._capacity;
+    // console.log(`index for ${key} = `, index);
+    return index;
 
-    const index = start % this._capacity;
+    // const index = start % this._capacity;
     // const slot = this._slots[index];
     // if (slot === undefined) {
     //   this._slots[index] = new LinkedList();
     // }
-    return index;
+    //   console.log('index', index);
+    //   return index;
   }
 
   _resize(size) {
@@ -68,25 +93,22 @@ class HashMap {
     this._capacity = size;
     // Reset the length - it will get rebuilt as you add the items back
     this.length = 0;
-    this._deleted = 0;
     this._slots = [];
 
     for (const slot of oldSlots) {
-      if (slot !== undefined && !slot.deleted) {
-        if (slot.head) {
-          let currNode = slot.head;
-          this.set(currNode.value);
-          while (currNode.next) {
-            currNode = currNode.next;
-            this.set(currNode.value);
-          }
+      if (slot !== undefined) {
+        let currNode = slot.head;
+        let prevNode = slot.head;
+        while (currNode !== null) {
+          prevNode = currNode;
+          this.set(prevNode.value.key, prevNode.value.value);
+          currNode = currNode.next;
         }
       }
     }
   }
 
   static _hashString(string) {
-    console.log(string);
     let hash = 5381;
     for (let i = 0; i < string.length; i++) {
       hash = (hash << 5) + hash + string.charCodeAt(i);

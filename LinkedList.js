@@ -87,7 +87,7 @@ class LinkedList {
       return null;
     }
     //if the node to be removed is head, make the next node head
-    if(this.head === item){
+    if(this.head.value === item){
       this.head = this.head.next;
       return;
     }
