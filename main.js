@@ -23,12 +23,23 @@ function main() {
     const chars = new hashMapClass();
     for (let i = 0; i < str.length; i++) {
       let char = str[i];
-      chars.set(char, )
+      try {
+        if (chars.get(char)) {
+          chars.remove(char);
+        } else {
+          chars.set(char, 'odd');
+        }
+      }
+      catch (err) {
+        chars.set(char, 'odd');
+      }
     }
-    console.log(chars);
+    // console.log(chars);
+    return (chars.length > 1) ? false : true;
   }
 
-  isPalindrome('acecarr');
+  console.log(isPalindrome('acecarr'));
+  console.log(isPalindrome('north'));
 }
 
 main();
